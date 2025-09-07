@@ -1,38 +1,52 @@
-let cart = [];
-let total = 0;
+const express = require("express");
+const cors = require("cors");
+const nodemailer = require("nodemailer");
 
-function addToCart(product, price) {
-  cart.push({ product, price });
-  total += price;
-  renderCart();
-}
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-function renderCart() {
-  const cartList = document.getElementById("cart-items");
-  cartList.innerHTML = "";
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-  cart.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.product} – ₹${item.price}`;
-    cartList.appendChild(li);
-  });
-
-  document.getElementById("total").textContent = `Total: ₹${total}`;
-}
-
-document.getElementById("checkout-btn").addEventListener("click", () => {
-  if (cart.length === 0) {
-    alert("Your cart is empty!");
-  } else {
-    document.getElementById("upi-section").style.display = "block";
-    window.scrollTo(0, document.body.scrollHeight);
+// Configure your email transporter (using Gmail SMTP as example)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "your.email@gmail.com",       // Your email
+    pass: "your-email-app-password"     // App password or real password (use app password for Gmail)
   }
 });
 
-document.getElementById("confirm-payment-btn").addEventListener("click", () => {
-  alert("✅ Thank you! Your payment is confirmed. We’ll process your order soon.");
-  cart = [];
-  total = 0;
-  renderCart();
-  document.getElementById("upi-section").style.display = "none";
+// POST /api/orders - receive order and send email notification
+app.post("/api/orders", async (req, res) => {
+  const { items, total, timestamp } = req.body;
+
+  if (!items || !total) {
+    return res.status(400).json({ error: "Invalid order data" });
+  }
+
+  // Format order details for email
+  const itemsList = items.map(
+    (item) => `${item.product} - ${item.qty} Kg - ₹${item.price.toFixed(2)}`
+  ).join("\n");
+
+  const mailOptions = {
+    from: '"PS Pickles" <your.email@gmail.com>',
+    to: "your.email@gmail.com",  // Your email to receive orders
+    subject: `New Order Received - ₹${total}`,
+    text: `You have received a new order on ${timestamp}.\n\nOrder details:\n${itemsList}\n\nTotal: ₹${total}`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Order received and email sent" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

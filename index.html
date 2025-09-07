@@ -1,237 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PS Pickles</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff8e1;
-      margin: 0;
-      padding: 20px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    header h1 {
-      color: #5d4037;
-    }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .product {
-      background: white;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    select, .product button {
-      margin-top: 10px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .product button {
-      background: #ff9800;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .cart, .upi {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    .checkout-btn {
-      background: #4caf50;
-      color: white;
-      padding: 12px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .empty-btn {
-      background: #e53935;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-    .remove-btn {
-      background: #d32f2f;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 8px;
-      font-size: 12px;
-    }
-    .upi a {
-      display: inline-block;
-      background: #2196f3;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Pickles - Premium Homemade Pickles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for additional elements */
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(255, 235, 59, 0.5), rgba(76, 175, 80, 0.5)), url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4b6e2a33-649c-4f93-b5d9-2af17005a1ad.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .product-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .hero-bg {
+                background-size: 100% 50%;
+            }
+        }
+        /* Ensure cart modal is accessible */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .cart-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-yellow-100 to-green-50 min-h-screen text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="text-2xl font-bold text-green-600">[LOGO] PS Pickles</div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#products" class="hover:text-green-600 transition">Products</a>
+                    <a href="#about" class="hover:text-green-600 transition">About</a>
+                    <a href="#contact" class="hover:text-green-600 transition">Contact</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="cart-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
+                    <span>Cart (0)</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-  <header>
-    <h1>🥒 PS Pickles</h1>
-    <p>Premium Homemade Pickles</p>
-  </header>
+    <!-- Hero Section -->
+    <section class="hero-bg py-20 text-center text-white relative">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">Premium Homemade Pickles</h1>
+            <p class="text-xl md:text-2xl mb-8 drop-shadow">Taste the tradition of authentic, pure, and flavorful pickles made with love and organic ingredients.</p>
+            <a href="#products" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
+                Shop Now
+            </a>
+        </div>
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e5350514-6b38-4e73-aa23-a8cfbc82c0a2.png" alt="Colorful assortment of homemade pickles including mango, lemon, garlic, and chili varieties arranged on a wooden platter with fresh fruits and vegetables in the background, emphasizing freshness and variety" class="absolute inset-0 w-full h-full object-cover opacity-20 -z-10" />
+    </section>
 
-  <!-- Products -->
-  <section class="products">
-    <div class="product">
-      <h3>🥭 Mango Pickle</h3>
-      <p>₹300 / Kg</p>
-      <select id="qty-mango">
-        <option value="0.1">100g</option>
-        <option value="0.25">250g</option>
-        <option value="0.5">500g</option>
-        <option value="0.75">750g</option>
-        <option value="1">1 Kg</option>
-        <option value="2">2 Kg</option>
-      </select>
-      <button onclick="addToCart('Mango Pickle', 300, document.getElementById('qty-mango').value)">Add to Cart</button>
+    <!-- Products Section -->
+    <section id="products" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Our Best Pickles</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3c889654-5705-4067-9360-19d631708c55.png" alt="Ripe mangoes being picked and processed into tangy mango pickle, close-up view of fresh green and yellow mango slices in spiced oil" class="product-image mx-auto mb-4 rounded-md" />
+                    <h3 class="text-xl font-semibold mb-2">Mango Pickle</h3>
+                    <p class="text-gray-600 mb-4">Tangy and sweet, made from ripe mangoes and traditional spices.</p>
+                    <p class="text-2xl font-bold text-green-600 mb-4">₹300 / Kg</p>
+                    <select id="qty-mango" class="mb-2 p-2 border border-gray-300 rounded">
+                        <option value="0.1">100g</option>
+                        <option value="0.25">250g</option>
+                        <option value="0.5">500g</option>
+                        <option value="0.75">750g</option>
+                        <option value="1">1 Kg</option>
+                        <option value="2">2 Kg</option>
+                    </select>
+                    <button onclick="addToCart('Mango Pickle', 300, document.getElementById('qty-mango').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5299e211-834d-4189-b37d-4b110aa842b3.png" alt="Fresh lemons sliced and marinated in a spicy lemon pickle mix with green chilies and garlic, detailed texture of tangy preserved lemons in a jar" class="product-image mx-auto mb-4 rounded-md" />
+                    <h3 class="text-xl font-semibold mb-2">Lemon Pickle</h3>
+                    <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
+                    <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
+                    <select id="qty-lemon" class="mb-2 p-2 border border-gray-300 rounded">
+                        <option value="0.1">100g</option>
+                        <option value="0.25">250g</option>
+                        <option value="0.5">500g</option>
+                        <option value="0.75">750g</option>
+                        <option value="1">1 Kg</option>
+                        <option value="2">2 Kg</option>
+                    </select>
+                    <button onclick="addToCart('Lemon Pickle', 280, document.getElementById('qty-lemon').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0d87e0b5-f5c4-4732-b457-3376333908d0.png" alt="Whole garlic cloves and slices pickled in a rich red oil with spices, showcasing the aromatic and pungent garlic pickle with chili flakes" class="product-image mx-auto mb-4 rounded-md" />
+                    <h3 class="text-xl font-semibold mb-2">Garlic Pickle</h3>
+                    <p class="text-gray-600 mb-4">Bold and flavorful, perfect for enhancing any dish.</p>
+                    <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
+                    <select id="qty-garlic" class="mb-2 p-2 border border-gray-300 rounded">
+                        <option value="0.1">100g</option>
+                        <option value="0.25">250g</option>
+                        <option value="0.5">500g</option>
+                        <option value="0.75">750g</option>
+                        <option value="1">1 Kg</option>
+                        <option value="2">2 Kg</option>
+                    </select>
+                    <button onclick="addToCart('Garlic Pickle', 320, document.getElementById('qty-garlic').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/178bb406-489a-4757-bc47-2278ce6549cd.png" alt="Red and green chilies preserved in spiced oil with mustard seeds and turmeric, vibrant chili pickle with intense heat and flavor" class="product-image mx-auto mb-4 rounded-md" />
+                    <h3 class="text-xl font-semibold mb-2">Mirchi Pickle</h3>
+                    <p class="text-gray-600 mb-4">Spicy and fiery, for those who love heat in every bite.</p>
+                    <p class="text-2xl font-bold text-green-600 mb-4">₹350 / Kg</p>
+                    <select id="qty-mirchi" class="mb-2 p-2 border border-gray-300 rounded">
+                        <option value="0.1">100g</option>
+                        <option value="0.25">250g</option>
+                        <option value="0.5">500g</option>
+                        <option value="0.75">750g</option>
+                        <option value="1">1 Kg</option>
+                        <option value="2">2 Kg</option>
+                    </select>
+                    <button onclick="addToCart('Mirchi Pickle', 350, document.getElementById('qty-mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Why Choose Us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="w-16 h-16 bg-green-600 mx-auto mb-4 rounded-full flex items-center justify-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c9c2675e-e1d1-4c90-a27f-31b967b4885a.png" alt="Icon representing organic and pure ingredients, green leaf symbolizing freshness and health" class="w-8 h-8" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">100% Organic</h3>
+                    <p>Made with pure, organic ingredients without any preservatives or artificial flavors.</p>
+                </div>
+                <div>
+                    <div class="w-16 h-16 bg-yellow-500 mx-auto mb-4 rounded-full flex items-center justify-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d6f76008-c24b-4810-a66c-69acd2d80c2b.png" alt="Icon symbolizing traditional homemade process, a mortar and pestle representing handcrafted quality" class="w-8 h-8" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Homemade Recipes</h3>
+                    <p>Traditional recipes passed down through generations for authentic taste.</p>
+                </div>
+                <div>
+                    <div class="w-16 h-16 bg-red-500 mx-auto mb-4 rounded-full flex items-center justify-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3437c422-e4a4-4cfb-9350-628c24c8cc7f.png" alt="Icon denoting fast delivery service, a delivery truck speeding towards customers" class="w-8 h-8" />
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Free Delivery</h3>
+                    <p>Free doorstep delivery across the city for orders above ₹500.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-content">
+            <h2 class="text-2xl font-bold mb-4">Your Cart</h2>
+            <div id="cart-items" class="mb-4"></div>
+            <p id="total" class="font-bold text-xl mb-4">Total: ₹0</p>
+            <button id="empty-cart-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-4">Clear Cart</button>
+            <button id="checkout-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md">Proceed to Checkout</button>
+            <button onclick="toggleCart()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">&times;</button>
+        </div>
     </div>
-    <div class="product">
-      <h3>🍋 Lemon Pickle</h3>
-      <p>₹280 / Kg</p>
-      <select id="qty-lemon">
-        <option value="0.1">100g</option>
-        <option value="0.25">250g</option>
-        <option value="0.5">500g</option>
-        <option value="0.75">750g</option>
-        <option value="1">1 Kg</option>
-        <option value="2">2 Kg</option>
-      </select>
-      <button onclick="addToCart('Lemon Pickle', 280, document.getElementById('qty-lemon').value)">Add to Cart</button>
-    </div>
-    <div class="product">
-      <h3>🧄 Garlic Pickle</h3>
-      <p>₹320 / Kg</p>
-      <select id="qty-garlic">
-        <option value="0.1">100g</option>
-        <option value="0.25">250g</option>
-        <option value="0.5">500g</option>
-        <option value="0.75">750g</option>
-        <option value="1">1 Kg</option>
-        <option value="2">2 Kg</option>
-      </select>
-      <button onclick="addToCart('Garlic Pickle', 320, document.getElementById('qty-garlic').value)">Add to Cart</button>
-    </div>
-    <div class="product">
-      <h3>🌶️ Mirchi Pickle</h3>
-      <p>₹350 / Kg</p>
-      <select id="qty-mirchi">
-        <option value="0.1">100g</option>
-        <option value="0.25">250g</option>
-        <option value="0.5">500g</option>
-        <option value="0.75">750g</option>
-        <option value="1">1 Kg</option>
-        <option value="2">2 Kg</option>
-      </select>
-      <button onclick="addToCart('Mirchi Pickle', 350, document.getElementById('qty-mirchi').value)">Add to Cart</button>
-    </div>
-  </section>
 
-  <!-- Cart -->
-  <section class="cart">
-    <h2>🛒 Your Cart</h2>
-    <ul id="cart-items"></ul>
-    <p id="total">Total: ₹0</p>
-    <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
-    <button id="empty-cart-btn" class="empty-btn">🗑 Empty Cart</button>
-  </section>
+    <!-- UPI Section (shown on checkout) -->
+    <section id="upi-section" class="hidden py-16 bg-white">
+        <div class="max-w-md mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-4">Complete Your Payment</h2>
+            <p class="mb-4">Scan the QR or use the link to pay via UPI.</p>
+            <a id="upi-link" href="#" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block mb-4">Pay with UPI</a>
+            <button id="confirm-payment-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">Confirm Payment</button>
+        </div>
+    </section>
 
-  <!-- UPI Section -->
-  <section id="upi-section" class="upi" style="display:none;">
-    <h2>Pay via Google Pay / UPI</h2>
-    <p>Scan the QR or click below to pay instantly.</p>
-    <a id="upi-link" href="#" target="_blank">Pay Now</a>
-    <button id="confirm-payment-btn">✅ Confirm Payment</button>
-  </section>
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-green-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Get in Touch</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Contact Details</h3>
+                    <p class="mb-2"><strong>Phone:</strong> +91 98765 43210</p>
+                    <p class="mb-2"><strong>Email:</strong> info@pspickles.com</p>
+                    <p class="mb-4"><strong>Address:</strong> 123 Main Street, City, India - 110001</p>
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">Call Now</button>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Send a Message</h3>
+                    <form>
+                        <input type="text" placeholder="Your Name" class="w-full mb-4 p-2 border border-gray-300 rounded" required>
+                        <input type="email" placeholder="Your Email" class="w-full mb-4 p-2 border border-gray-300 rounded" required>
+                        <textarea placeholder="Your Message" rows="4" class="w-full mb-4 p-2 border border-gray-300 rounded" required></textarea>
+                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <script>
-    let cart = [];
-    let total = 0;
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>© 2023 PS Pickles. All rights reserved. Handcrafted with love for authentic flavors.</p>
+            <div class="mt-4 space-x-4">
+                <a href="#" class="hover:text-yellow-400">Facebook</a>
+                <a href="#" class="hover:text-yellow-400">Instagram</a>
+                <a href="#" class="hover:text-yellow-400">Twitter</a>
+            </div>
+        </div>
+    </footer>
 
-    function addToCart(product, pricePerKg, qtyKg) {
-      const price = pricePerKg * parseFloat(qtyKg);
-      cart.push({ product, qtyKg, price });
-      total += price;
-      renderCart();
-    }
+    <script>
+        let cart = [];
+        let total = 0;
 
-    function removeFromCart(index) {
-      total -= cart[index].price;
-      cart.splice(index, 1);
-      renderCart();
-    }
+        function formatPrice(num) {
+            return num.toFixed(2);
+        }
 
-    function renderCart() {
-      const cartList = document.getElementById("cart-items");
-      cartList.innerHTML = "";
+        function addToCart(product, pricePerKg, qtyKg) {
+            const qty = parseFloat(qtyKg);
+            if (qty <= 0) {
+                alert("Please select a valid quantity.");
+                return;
+            }
+            const price = pricePerKg * qty;
+            cart.push({ product, qty, price });
+            total += price;
+            updateCartDisplay();
+            alert(`${product} added to cart!`);
+        }
 
-      cart.forEach((item, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${item.product} – ${item.qtyKg} Kg – ₹${item.price}`;
+        function removeFromCart(index) {
+            total -= cart[index].qty;
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
 
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Remove";
-        removeBtn.className = "remove-btn";
-        removeBtn.onclick = () => removeFromCart(index);
+        function updateCartDisplay() {
+            const cartList = document.getElementById("cart-items");
+            cartList.innerHTML = "";
+            cart.forEach((item, index) => {
+                const li = document.createElement("li");
+                li.className = "flex justify-between items-center mb-2";
+                li.innerHTML = `
+                    ${item.product} - ${item.qty} Kg - ₹${formatPrice(item.price)}
+                    <button onclick="removeFromCart(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-sm">Remove</button>
+                `;
+                cartList.appendChild(li);
+            });
+            document.getElementById("total").textContent = `Total: ₹${formatPrice(total)}`;
+            document.querySelector("#cart-btn span").textContent = `Cart (${cart.length})`;
+        }
 
-        li.appendChild(removeBtn);
-        cartList.appendChild(li);
-      });
+        function toggleCart() {
+            document.getElementById("cart-modal").style.display = document.getElementById("cart-modal").style.display === "flex" ? "none" : "flex";
+        }
 
-      document.getElementById("total").textContent = `Total: ₹${total}`;
-    }
+        // Event listeners
+        document.getElementById("cart-btn").addEventListener("click", toggleCart);
 
-    document.getElementById("checkout-btn").addEventListener("click", () => {
-      if (cart.length === 0) {
-        alert("Your cart is empty!");
-      } else {
-        const upiID = "kgolu123g-4@okhdfcbank"; // Replace with your real UPI ID
-        const upiLink = `upi://pay?pa=${upiID}&pn=PS Pickles&am=${total}&cu=INR`;
-        document.getElementById("upi-link").setAttribute("href", upiLink);
+        document.getElementById("checkout-btn").addEventListener("click", () => {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            toggleCart();
+            const upiID = "kgolu123g-4@okhdfcbank"; // Replace with your real UPI ID
+            const upiLink = `upi://pay?pa=${encodeURIComponent(upiID)}&pn=${encodeURIComponent("PS Pickles")}&am=${formatPrice(total)}&cu=INR`;
+            document.getElementById("upi-link").setAttribute("href", upiLink);
+            document.getElementById("upi-section").classList.remove("hidden");
+            window.scrollTo({ top: document.getElementById("upi-section").offsetTop, behavior: "smooth" });
+        });
 
-        document.getElementById("upi-section").style.display = "block";
-        window.scrollTo(0, document.body.scrollHeight);
-      }
-    });
+        document.getElementById("confirm-payment-btn").addEventListener("click", () => {
+            alert("Thank you for your payment! Your order has been confirmed.");
+            cart = [];
+            total = 0;
+            updateCartDisplay();
+            document.getElementById("upi-section").classList.add("hidden");
+            toggleCart();
+        });
 
-    document.getElementById("confirm-payment-btn").addEventListener("click", () => {
-      alert("✅ Thank you! Your payment is confirmed. We’ll process your order soon.");
-      cart = [];
-      total = 0;
-      renderCart();
-      document.getElementById("upi-section").style.display = "none";
-    });
+        document.getElementById("empty-cart-btn").addEventListener("click", () => {
+            if (cart.length === 0) {
+                alert("Cart is already empty!");
+                return;
+            }
+            if (confirm("Are you sure you want to empty your cart?")) {
+                cart = [];
+                total = 0;
+                updateCartDisplay();
+                alert("Cart has been emptied!");
+            }
+        });
 
-    document.getElementById("empty-cart-btn").addEventListener("click", () => {
-      cart = [];
-      total = 0;
-      renderCart();
-      alert("🗑 Your cart has been emptied!");
-    });
-  </script>
-
+        // Close modal when clicking outside
+        document.getElementById("cart-modal").addEventListener("click", (e) => {
+            if (e.target === e.currentTarget) {
+                toggleCart();
+            }
+        });
+    </script>
 </body>
 </html>
+</content>
+</create_file>
