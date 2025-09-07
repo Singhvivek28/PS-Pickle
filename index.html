@@ -45,9 +45,6 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       margin-bottom: 20px;
     }
-    button {
-      margin-top: 10px;
-    }
     .checkout-btn {
       background: #4caf50;
       color: white;
@@ -55,6 +52,25 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+    }
+    .empty-btn {
+      background: #e53935;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .remove-btn {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 8px;
+      font-size: 12px;
     }
     .upi a {
       display: inline-block;
@@ -92,9 +108,14 @@
       <button onclick="addToCart('Garlic Pickle', 320)">Add to Cart</button>
     </div>
     <div class="product">
-      <h3>🥕 Carrot Pickle</h3>
-      <p>₹280 / Kg</p>
-      <button onclick="addToCart('Carrot Pickle', 280)">Add to Cart</button>
+      <h3>🌶️ Mirchi Pickle</h3>
+      <p>₹350 / Kg</p>
+      <button onclick="addToCart('Mirchi Pickle', 350)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <h3>🌶️ Bharva Mirchi Pickle</h3>
+      <p>₹400 / Kg</p>
+      <button onclick="addToCart('Bharva Mirchi Pickle', 400)">Add to Cart</button>
     </div>
   </section>
 
@@ -104,13 +125,13 @@
     <ul id="cart-items"></ul>
     <p id="total">Total: ₹0</p>
     <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+    <button id="empty-cart-btn" class="empty-btn">🗑 Empty Cart</button>
   </section>
 
   <!-- UPI Section -->
   <section id="upi-section" class="upi" style="display:none;">
     <h2>Pay via Google Pay / UPI</h2>
     <p>Scan the QR or click below to pay instantly.</p>
-    <!-- Replace with your UPI ID -->
     <a id="upi-link" href="#" target="_blank">Pay Now</a>
     <button id="confirm-payment-btn">✅ Confirm Payment</button>
   </section>
@@ -125,13 +146,26 @@
       renderCart();
     }
 
+    function removeFromCart(index) {
+      total -= cart[index].price;
+      cart.splice(index, 1);
+      renderCart();
+    }
+
     function renderCart() {
       const cartList = document.getElementById("cart-items");
       cartList.innerHTML = "";
 
-      cart.forEach(item => {
+      cart.forEach((item, index) => {
         const li = document.createElement("li");
         li.textContent = `${item.product} – ₹${item.price}`;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remove";
+        removeBtn.className = "remove-btn";
+        removeBtn.onclick = () => removeFromCart(index);
+
+        li.appendChild(removeBtn);
         cartList.appendChild(li);
       });
 
@@ -142,7 +176,6 @@
       if (cart.length === 0) {
         alert("Your cart is empty!");
       } else {
-        // Update UPI link dynamically
         const upiID = "kgolu123g-4@okhdfcbank"; // Replace with your real UPI ID
         const upiLink = `upi://pay?pa=${upiID}&pn=PS Pickles&am=${total}&cu=INR`;
         document.getElementById("upi-link").setAttribute("href", upiLink);
@@ -158,6 +191,13 @@
       total = 0;
       renderCart();
       document.getElementById("upi-section").style.display = "none";
+    });
+
+    document.getElementById("empty-cart-btn").addEventListener("click", () => {
+      cart = [];
+      total = 0;
+      renderCart();
+      alert("🗑 Your cart has been emptied!");
     });
   </script>
 
