@@ -10,7 +10,7 @@
   <style>
     /* Custom styles */
     .hero-bg {
-      background: linear-gradient(135deg, rgba(255, 235, 59, 0.5), rgba(76, 175, 80, 0.5)), url('https://placehold.co/1920x600');
+      background: linear-gradient(135deg, rgba(255, 235, 59, 0.5), rgba(76, 175, 80, 0.5)), url('ps2.png');
       background-size: cover;
       background-position: center;
     }
@@ -89,81 +89,171 @@
         Shop Now
       </a>
     </div>
-    <img src="https://placehold.co/1920x600" alt="Colorful assortment of homemade pickles" class="absolute inset-0 w-full h-full object-cover opacity-20 -z-10" />
+    <img src="ps2.png" alt="Colorful assortment of homemade pickles" class="absolute inset-0 w-full h-full object-cover opacity-20 -z-10" />
   </section>
 
-  <!-- Products Section -->
-  <section id="products" class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Our Best Pickles</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Mango Pickle -->
-        <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
-          <img src="Mango.jpeg" alt="Mango Pickle" class="product-image mx-auto mb-4 rounded-md" />
-          <h3 class="text-xl font-semibold mb-2">Mango Pickle</h3>
-          <p class="text-gray-600 mb-4">Tangy and sweet, made from ripe mangoes and traditional spices.</p>
-          <p class="text-2xl font-bold text-green-600 mb-4">₹300 / Kg</p>
-          <select id="qty-mango" class="mb-2 p-2 border border-gray-300 rounded">
-            <option value="0.1">100g</option>
-            <option value="0.25">250g</option>
-            <option value="0.5">500g</option>
-            <option value="0.75">750g</option>
-            <option value="1">1 Kg</option>
-            <option value="2">2 Kg</option>
-          </select>
-          <button onclick="addToCart('Mango Pickle', 300, document.getElementById('qty-mango').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+ <!-- Products Section -->
+<section id="products" class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Our Best Pickles</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <!-- Mango Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Mango.jpeg" alt="Mango Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Mango hover.jpeg" alt="Mango Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
         </div>
-        <!-- Lemon Pickle -->
-        <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
-          <img src="Lemon.png" alt="Lemon Pickle" class="product-image mx-auto mb-4 rounded-md" />
-          <h3 class="text-xl font-semibold mb-2">Lemon Pickle</h3>
-          <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
-          <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
-          <select id="qty-lemon" class="mb-2 p-2 border border-gray-300 rounded">
-            <option value="0.1">100g</option>
-            <option value="0.25">250g</option>
-            <option value="0.5">500g</option>
-            <option value="0.75">750g</option>
-            <option value="1">1 Kg</option>
-            <option value="2">2 Kg</option>
-          </select>
-          <button onclick="addToCart('Lemon Pickle', 280, document.getElementById('qty-lemon').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-        </div>
-        <!-- Garlic Pickle -->
-        <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
-          <img src="Garlic.png" alt="Garlic Pickle" class="product-image mx-auto mb-4 rounded-md" />
-          <h3 class="text-xl font-semibold mb-2">Garlic Pickle</h3>
-          <p class="text-gray-600 mb-4">Bold and flavorful, perfect for enhancing any dish.</p>
-          <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
-          <select id="qty-garlic" class="mb-2 p-2 border border-gray-300 rounded">
-            <option value="0.1">100g</option>
-            <option value="0.25">250g</option>
-            <option value="0.5">500g</option>
-            <option value="0.75">750g</option>
-            <option value="1">1 Kg</option>
-            <option value="2">2 Kg</option>
-          </select>
-          <button onclick="addToCart('Garlic Pickle', 320, document.getElementById('qty-garlic').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-        </div>
-        <!-- Mirchi Pickle -->
-        <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition">
-          <img src="Bharva Mirchi.png" alt="Bharva Mirchi Pickle" class="product-image mx-auto mb-4 rounded-md" />
-          <h3 class="text-xl font-semibold mb-2">Bharva irchi Pickle</h3>
-          <p class="text-gray-600 mb-4">Spicy and fiery, for those who love heat in every bite.</p>
-          <p class="text-2xl font-bold text-green-600 mb-4">₹450 / Kg</p>
-          <select id="qty-mirchi" class="mb-2 p-2 border border-gray-300 rounded">
-            <option value="0.1">100g</option>
-            <option value="0.25">250g</option>
-            <option value="0.5">500g</option>
-            <option value="0.75">750g</option>
-            <option value="1">1 Kg</option>
-            <option value="2">2 Kg</option>
-          </select>
-          <button onclick="addToCart('Mirchi Pickle', 350, document.getElementById('qty-mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-        </div>
+        <h3 class="text-xl font-semibold mb-2">Mango Pickle</h3>
+        <p class="text-gray-600 mb-4">Tangy and sweet, made from ripe mangoes and traditional spices.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹300 / Kg</p>
+        <select id="qty-mango" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Mango Pickle', 300, document.getElementById('qty-mango').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
       </div>
+
+      <!-- Mirchi Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Mirchi.png" alt="Mirchi Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Mirchi hover.jpeg" alt="Mirchi Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Mirchi Pickle</h3>
+        <p class="text-gray-600 mb-4">Tangy and Sour, made from Mirchi and traditional spices.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹250 / Kg</p>
+        <select id="qty-Mirchi" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Mirchi Pickle', 250, document.getElementById('qty-Mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+
+      <!-- Carrot Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Carrot.png" alt="Carrot Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Carrot-hover.png" alt="Carrot Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Carrot Pickle</h3>
+        <p class="text-gray-600 mb-4">Tangy and Sour, made from Carrot and traditional spices.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
+        <select id="qty-Carrot" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Carrot Pickle', 280, document.getElementById('qty-Carrot').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+
+      <!-- Lemon Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Lemon.png" alt="Lemon Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Lemon-hover.png" alt="Lemon Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Lemon Pickle</h3>
+        <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
+        <select id="qty-lemon" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Lemon Pickle', 280, document.getElementById('qty-lemon').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+<!-- Amla Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Amla.png" alt="Amla Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Amla-hover.jpeg" alt="Amla Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Amla Pickle</h3>
+        <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
+        <select id="qty-Amla" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Amla Pickle', 320, document.getElementById('qty-Amla').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+
+      <!-- Garlic Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Garlic.png" alt="Garlic Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Garlic hover.jpeg" alt="Garlic Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Garlic Pickle</h3>
+        <p class="text-gray-600 mb-4">Bold and flavorful, perfect for enhancing any dish.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
+        <select id="qty-garlic" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Garlic Pickle', 320, document.getElementById('qty-garlic').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+
+      <!-- Bharva Mirchi Pickle -->
+      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
+        <div class="relative group h-56">
+          <img src="Bharva Mirchi.png" alt="Bharva Mirchi Pickle"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="Bharva-Mirch hover.jpeg" alt="Bharva Mirchi Pickle Hover"
+               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Bharva Mirchi Pickle</h3>
+        <p class="text-gray-600 mb-4">Spicy and fiery, for those who love heat in every bite.</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹450 / Kg</p>
+        <select id="qty-mirchi" class="mb-2 p-2 border border-gray-300 rounded">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('Bharva Mirchi Pickle', 450, document.getElementById('qty-mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Cart Modal -->
   <div id="cart-modal" class="cart-modal">
