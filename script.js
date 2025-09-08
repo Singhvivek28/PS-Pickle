@@ -1,52 +1,35 @@
-const express = require("express");
-const cors = require("cors");
-const nodemailer = require("nodemailer");
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Configure your email transporter (using Gmail SMTP as example)
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "your.email@gmail.com",       // Your email
-    pass: "your-email-app-password"     // App password or real password (use app password for Gmail)
+document.getElementById("checkout-btn").addEventListener("click", () => {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
   }
-});
+  toggleCart();
 
-// POST /api/orders - receive order and send email notification
-app.post("/api/orders", async (req, res) => {
-  const { items, total, timestamp } = req.body;
+  const upiID = "kgolu123g-4@okhdfcbank"; // Replace with your real UPI ID
+  const payeeName = "PS Pickles";
+  const amount = total.toFixed(2);
 
-  if (!items || !total) {
-    return res.status(400).json({ error: "Invalid order data" });
-  }
+  // Construct UPI payment URL
+  const upiURL = `upi://pay?pa=${encodeURIComponent(upiID)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR`;
 
-  // Format order details for email
-  const itemsList = items.map(
-    (item) => `${item.product} - ${item.qty} Kg - ₹${item.price.toFixed(2)}`
-  ).join("\n");
+  // Set the payment link href
+  const upiLink = document.getElementById("upi-link");
+  upiLink.setAttribute("href", upiURL);
 
-  const mailOptions = {
-    from: '"PS Pickles" <your.email@gmail.com>',
-    to: "your.email@gmail.com",  // Your email to receive orders
-    subject: `New Order Received - ₹${total}`,
-    text: `You have received a new order on ${timestamp}.\n\nOrder details:\n${itemsList}\n\nTotal: ₹${total}`
-  };
+  // Generate QR code
+  const qrContainer = document.getElementById("qrcode");
+  qrContainer.innerHTML = ""; // Clear previous QR if any
+  new QRCode(qrContainer, {
+    text: upiURL,
+    width: 200,
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+  });
 
-  try {
-    await transporter.sendMail(mailOptions);
-    res.json({ message: "Order received and email sent" });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Failed to send email" });
-  }
-});
+  // Show UPI payment section
+  document.getElementById("upi-section").classList.remove("hidden");
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  // Scroll to UPI section smoothly
+  window.scrollTo({ top: document.getElementById("upi-section").offsetTop, behavior: "smooth" });
 });
