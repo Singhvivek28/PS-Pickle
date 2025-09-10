@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title> PS Pickles - Premium Homemade Pickles</title>
+  <title>PS Pickles - Premium Homemade Pickles</title>
+  <meta name="description" content="Authentic homemade Indian pickles made with organic ingredients. Shop Mango, Mirchi, Carrot, Lemon, Amla, Garlic, and Bharva Mirchi pickles." />
+  <meta name="keywords" content="Pickles, Indian Pickles, Homemade Pickles, Mango Pickle, Mirchi Pickle, Carrot Pickle, Lemon Pickle, Amla Pickle, Garlic Pickle, Bharva Mirchi Pickle" />
+  <meta name="author" content="PS Pickles" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <link rel="stylesheet" href="style.css">
   <style>
     /* Custom styles */
     .hero-bg {
@@ -18,6 +20,10 @@
       width: 200px;
       height: 150px;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .product-image:hover {
+      transform: scale(1.05);
     }
     @media (max-width: 768px) {
       .hero-bg {
@@ -33,6 +39,12 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .cart-modal.open {
+      display: flex;
+      opacity: 1;
     }
     .cart-content {
       background: white;
@@ -41,6 +53,13 @@
       max-width: 500px;
       width: 90%;
       position: relative;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .cart-modal.open .cart-content {
+      transform: translateY(0);
+      opacity: 1;
     }
     .cart-content button.close-btn {
       position: absolute;
@@ -51,12 +70,118 @@
       cursor: pointer;
       color: #555;
     }
+    /* Sticky header shadow on scroll */
+    header.sticky-shadow {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    /* Focus outlines for accessibility */
+    a:focus, button:focus, select:focus {
+      outline: 3px solid #4ade80; /* Tailwind green-400 */
+      outline-offset: 2px;
+    }
+    /* Animations for fade-in and slide-up */
+    .fade-slide {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-slide.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Search input styling */
+    #search-input {
+      max-width: 400px;
+      margin: 0 auto 2rem auto;
+      display: block;
+      padding: 0.5rem 1rem;
+      border: 2px solid #4ade80;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    #search-input:focus {
+      border-color: #22c55e; /* Tailwind green-500 */
+      outline: none;
+    }
+    /* Cart count animation */
+    .cart-count-animate {
+      animation: pop 0.3s ease forwards;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+    /* User initial circle */
+    #user-initial {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #22c55e; /* Tailwind green-500 */
+      color: white;
+      font-weight: bold;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      margin-left: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    #user-initial:hover {
+      background-color: #16a34a; /* Tailwind green-600 */
+    }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "PS Pickles",
+    "description": "Authentic homemade Indian pickles made with organic ingredients.",
+    "url": "https://ps-pickle.vercel.app",
+    "logo": "https://ps-pickle.vercel.app/ps.jpeg",
+    "sameAs": [
+      "https://www.facebook.com/pspickles",
+      "https://www.instagram.com/pspickles"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Pickle Products",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Mango Pickle",
+            "description": "Tangy and sweet, made from ripe mangoes and traditional spices.",
+            "image": "https://ps-pickle.vercel.app/Mango.jpeg"
+          },
+          "priceCurrency": "INR",
+          "price": "300"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Mirchi Pickle",
+            "description": "Tangy and Sour, made from Mirchi and traditional spices.",
+            "image": "https://ps-pickle.vercel.app/Mirchi.png"
+          },
+          "priceCurrency": "INR",
+          "price": "250"
+        }
+      ]
+    }
+  }
+  </script>
 </head>
 <body class="bg-gradient-to-br from-yellow-100 to-green-50 min-h-screen text-gray-800">
 
   <!-- Header -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
+  <header id="header" class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-3">
         <!-- Logo + Brand Name -->
@@ -64,224 +189,223 @@
         <span class="text-2xl font-bold text-green-600">PS Pickles</span>
 
         <!-- Navigation -->
-        <nav class="hidden md:flex space-x-6 ml-6">
-          <a href="#products" class="hover:text-green-600 transition">Products</a>
-          <a href="#about" class="hover:text-green-600 transition">About</a>
-          <a href="#contact" class="hover:text-green-600 transition">Contact</a>
+        <nav aria-label="Primary" class="hidden md:flex space-x-6 ml-6">
+          <a href="#products" class="hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-400 rounded" tabindex="0">Products</a>
+          <a href="#about" class="hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-400 rounded" tabindex="0">About</a>
+          <a href="#contact" class="hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-400 rounded" tabindex="0">Contact</a>
         </nav>
       </div>
 
-      <!-- Cart Button -->
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden focus:outline-none focus:ring-2 focus:ring-green-400 rounded">
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Cart Button and User Section -->
       <div class="flex items-center space-x-4">
-        <button id="cart-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
-          <span>Cart (0)</span>
+        <button id="cart-btn" aria-label="Open shopping cart" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
+          <span id="cart-count-text">Cart (0)</span>
         </button>
+        <!-- Login Link (shown when not logged in) -->
+        <a id="login-link" href="login.html" class="text-green-600 hover:text-green-700 font-semibold transition focus:outline-none focus:ring-2 focus:ring-green-400 rounded">Login</a>
+        <!-- User Initial Circle (shown when logged in) -->
+        <div id="user-initial" tabindex="0" aria-label="User profile" class="hidden ml-4 w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-lg cursor-pointer select-none"></div>
       </div>
     </div>
+
+    <!-- Mobile Navigation -->
+    <nav id="mobile-menu" class="hidden bg-white shadow-md md:hidden" aria-label="Mobile Primary Navigation">
+      <a href="#products" class="block px-4 py-3 border-b border-gray-200 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-400" tabindex="0">Products</a>
+      <a href="#about" class="block px-4 py-3 border-b border-gray-200 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-400" tabindex="0">About</a>
+      <a href="#contact" class="block px-4 py-3 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-400" tabindex="0">Contact</a>
+    </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="hero-bg py-20 text-center text-white relative">
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="max-w-4xl mx-auto px-4 fade-slide">
       <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">Premium Homemade Pickles</h1>
       <p class="text-xl md:text-2xl mb-8 drop-shadow">Taste the tradition of authentic, pure, and flavorful pickles made with love and organic ingredients.</p>
-      <a href="#products" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
+      <a href="#products" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-400">
         Shop Now
       </a>
     </div>
-    <img src="ps2.png" alt="Colorful assortment of homemade pickles" class="absolute inset-0 w-full h-full object-cover opacity-20 -z-10" />
+    <img src="ps2.png" alt="Colorful assortment of homemade pickles" class="absolute inset-0 w-full h-full object-cover opacity-20 -z-10" loading="lazy" />
   </section>
 
- <!-- Products Section -->
-<section id="products" class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-12 text-green-600">Our Best Pickles</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <!-- Search Filter -->
+  <input type="search" id="search-input" aria-label="Search products" placeholder="Search pickles..." />
 
-      <!-- Mango Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Mango.jpeg" alt="Mango Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Mango hover.jpeg" alt="Mango Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Mango Pickle</h3>
-        <p class="text-gray-600 mb-4">Tangy and sweet, made from ripe mangoes and traditional spices.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹300 / Kg</p>
-        <select id="qty-mango" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Mango Pickle', 300, document.getElementById('qty-mango').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
-      <!-- Mirchi Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Mirchi.png" alt="Mirchi Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Mirchi hover.jpeg" alt="Mirchi Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Mirchi Pickle</h3>
-        <p class="text-gray-600 mb-4">Tangy and Sour, made from Mirchi and traditional spices.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹250 / Kg</p>
-        <select id="qty-Mirchi" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Mirchi Pickle', 250, document.getElementById('qty-Mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
-      <!-- Carrot Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Carrot.png" alt="Carrot Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Carrot-hover.png" alt="Carrot Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Carrot Pickle</h3>
-        <p class="text-gray-600 mb-4">Tangy and Sour, made from Carrot and traditional spices.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
-        <select id="qty-Carrot" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Carrot Pickle', 280, document.getElementById('qty-Carrot').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
-      <!-- Lemon Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Lemon.png" alt="Lemon Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Lemon-hover.png" alt="Lemon Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Lemon Pickle</h3>
-        <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹280 / Kg</p>
-        <select id="qty-lemon" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Lemon Pickle', 280, document.getElementById('qty-lemon').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-<!-- Amla Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Amla.png" alt="Amla Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Amla-hover.jpeg" alt="Amla Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Amla Pickle</h3>
-        <p class="text-gray-600 mb-4">Sour and spicy, a classic favorite with authentic flavors.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
-        <select id="qty-Amla" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Amla Pickle', 320, document.getElementById('qty-Amla').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
-      <!-- Garlic Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Garlic.png" alt="Garlic Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Garlic hover.jpeg" alt="Garlic Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Garlic Pickle</h3>
-        <p class="text-gray-600 mb-4">Bold and flavorful, perfect for enhancing any dish.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹320 / Kg</p>
-        <select id="qty-garlic" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Garlic Pickle', 320, document.getElementById('qty-garlic').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
-      <!-- Bharva Mirchi Pickle -->
-      <div class="bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative">
-        <div class="relative group h-56">
-          <img src="Bharva Mirchi.png" alt="Bharva Mirchi Pickle"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
-          <img src="Bharva-Mirch hover.jpeg" alt="Bharva Mirchi Pickle Hover"
-               class="product-image mx-auto mb-4 rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
-        </div>
-        <h3 class="text-xl font-semibold mb-2">Bharva Mirchi Pickle</h3>
-        <p class="text-gray-600 mb-4">Spicy and fiery, for those who love heat in every bite.</p>
-        <p class="text-2xl font-bold text-green-600 mb-4">₹450 / Kg</p>
-        <select id="qty-mirchi" class="mb-2 p-2 border border-gray-300 rounded">
-          <option value="0.1">100g</option>
-          <option value="0.25">250g</option>
-          <option value="0.5">500g</option>
-          <option value="0.75">750g</option>
-          <option value="1">1 Kg</option>
-          <option value="2">2 Kg</option>
-        </select>
-        <button onclick="addToCart('Bharva Mirchi Pickle', 450, document.getElementById('qty-mirchi').value)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full">Add to Cart</button>
-      </div>
-
+  <!-- Products Section -->
+  <section id="products" class="py-16 bg-white max-w-7xl mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-12 text-green-600 fade-slide">Our Best Pickles</h2>
+    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Product cards inserted by JS -->
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="bg-white py-16 px-4 text-center max-w-4xl mx-auto fade-slide">
+    <h2 class="text-4xl font-bold mb-8 text-green-600">About PS Pickles</h2>
+    <p class="text-lg max-w-4xl mx-auto">Founded with a passion for preserving traditional Indian flavors, PS Pickles brings you the finest quality pickles and spice blends. Each product is crafted using age-old recipes and the freshest ingredients, ensuring an authentic taste experience. Our commitment to quality and flavor sets us apart in the market. Contact us at +91 9264910804</p>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="bg-gray-200 py-16 px-4 max-w-4xl mx-auto fade-slide">
+    <h2 class="text-4xl font-bold mb-8 text-green-600">Contact Us</h2>
+    <p class="text-lg mb-8">Have questions or need assistance? Reach out to us!</p>
+    <form aria-label="Contact form" class="bg-white p-8 rounded-lg shadow-md" onsubmit="event.preventDefault(); alert('Thank you for contacting PS Pickles! We will get back to you soon.'); this.reset();">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input type="text" name="name" placeholder="Your Name" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
+        <input type="email" name="email" placeholder="Your Email" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
+      </div>
+      <textarea name="message" placeholder="Your Message" rows="5" class="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true"></textarea>
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition">Send Message</button>
+    </form>
+  </section>
 
   <!-- Cart Modal -->
-  <div id="cart-modal" class="cart-modal">
+  <div id="cart-modal" class="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
     <div class="cart-content">
       <button class="close-btn" onclick="toggleCart()" aria-label="Close cart">&times;</button>
-      <h2 class="text-2xl font-bold mb-4">Your Cart</h2>
-      <div id="cart-items" class="mb-4"></div>
+      <h2 id="cart-title" class="text-2xl font-bold mb-4">Your Cart</h2>
+      <div id="cart-items" class="mb-4" tabindex="0" aria-live="polite" aria-relevant="additions removals"></div>
       <p id="total" class="font-bold text-xl mb-4">Total: ₹0</p>
-      <button id="empty-cart-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-4">Clear Cart</button>
-      <button id="checkout-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md">Proceed to Checkout</button>
+      <button id="empty-cart-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-4 focus:outline-none focus:ring-2 focus:ring-red-400">Clear Cart</button>
+      <button id="checkout-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">Proceed to Checkout</button>
     </div>
   </div>
 
   <!-- UPI Payment Section -->
-  <section id="upi-section" class="hidden py-16 bg-white text-center">
+  <section id="upi-section" class="hidden py-16 bg-white text-center max-w-4xl mx-auto fade-slide" tabindex="0" aria-live="polite">
     <h2 class="text-2xl font-bold mb-4">Complete Your Payment</h2>
     <p class="mb-4">Scan the QR code below or click the button to pay via Google Pay / UPI.</p>
     <div id="qrcode" style="width:200px; height:200px; margin: 0 auto;"></div>
-    <button id="pay-upi-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block mb-4">
+    <button id="pay-upi-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
       Pay with UPI
     </button>
     <br />
-    <button id="confirm-payment-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">Confirm Payment</button>
+    <button id="confirm-payment-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">Confirm Payment</button>
     <!-- Hidden link to store UPI URL -->
     <a id="upi-link" href="#" style="display:none;"></a>
   </section>
 
   <script>
+    // Product data
+    const products = [
+      {
+        id: 'mango',
+        name: 'Mango Pickle',
+        description: 'Tangy and sweet, made from ripe mangoes and traditional spices.',
+        pricePerKg: 300,
+        images: ['Mango.jpeg', 'Mango hover.jpeg']
+      },
+      {
+        id: 'mirchi',
+        name: 'Mirchi Pickle',
+        description: 'Tangy and Sour, made from Mirchi and traditional spices.',
+        pricePerKg: 250,
+        images: ['Mirchi.png', 'Mirchi hover.jpeg']
+      },
+      {
+        id: 'carrot',
+        name: 'Carrot Pickle',
+        description: 'Tangy and Sour, made from Carrot and traditional spices.',
+        pricePerKg: 280,
+        images: ['Carrot.png', 'Carrot-hover.png']
+      },
+      {
+        id: 'lemon',
+        name: 'Lemon Pickle',
+        description: 'Sour and spicy, a classic favorite with authentic flavors.',
+        pricePerKg: 280,
+        images: ['Lemon.png', 'Lemon-hover.png']
+      },
+      {
+        id: 'amla',
+        name: 'Amla Pickle',
+        description: 'Sour and spicy, a classic favorite with authentic flavors.',
+        pricePerKg: 320,
+        images: ['Amla.png', 'Amla-hover.jpeg']
+      },
+      {
+        id: 'garlic',
+        name: 'Garlic Pickle',
+        description: 'Bold and flavorful, perfect for enhancing any dish.',
+        pricePerKg: 320,
+        images: ['Garlic.png', 'Garlic hover.jpeg']
+      },
+      {
+        id: 'bharva-mirchi',
+        name: 'Bharva Mirchi Pickle',
+        description: 'Spicy and fiery, for those who love heat in every bite.',
+        pricePerKg: 450,
+        images: ['Bharva Mirchi.png', 'Bharva-Mirch hover.jpeg']
+      }
+    ];
+
+    // Render products dynamically with lazy loading and fade-slide animation
+    const productsGrid = document.getElementById('products-grid');
+
+    function createProductCard(product) {
+      const div = document.createElement('div');
+      div.className = 'bg-gray-50 rounded-lg shadow-md p-6 text-center hover:shadow-lg transition relative fade-slide';
+      div.setAttribute('tabindex', '0');
+      div.setAttribute('aria-label', `${product.name}, ${product.description}, price ₹${product.pricePerKg} per Kg`);
+
+      div.innerHTML = `
+        <div class="relative group h-56 mx-auto w-[200px]">
+          <img src="${product.images[0]}" alt="${product.name}" loading="lazy"
+               class="product-image rounded-md absolute inset-0 transition-opacity duration-500 opacity-100 group-hover:opacity-0" />
+          <img src="${product.images[1]}" alt="${product.name} hover" loading="lazy"
+               class="product-image rounded-md absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100" />
+        </div>
+        <h3 class="text-xl font-semibold mt-4 mb-2">${product.name}</h3>
+        <p class="text-gray-600 mb-4">${product.description}</p>
+        <p class="text-2xl font-bold text-green-600 mb-4">₹${product.pricePerKg} / Kg</p>
+        <select id="qty-${product.id}" class="mb-2 p-2 border border-gray-300 rounded w-full" aria-label="Select quantity for ${product.name}">
+          <option value="0.1">100g</option>
+          <option value="0.25">250g</option>
+          <option value="0.5">500g</option>
+          <option value="0.75">750g</option>
+          <option value="1">1 Kg</option>
+          <option value="2">2 Kg</option>
+        </select>
+        <button onclick="addToCart('${product.name}', ${product.pricePerKg}, document.getElementById('qty-${product.id}').value)" 
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 transition" 
+                aria-label="Add ${product.name} to cart">
+          Add to Cart
+        </button>
+      `;
+      return div;
+    }
+
+    function renderProducts(productsToRender) {
+      productsGrid.innerHTML = '';
+      if (productsToRender.length === 0) {
+        productsGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">No products found.</p>';
+        return;
+      }
+      productsToRender.forEach(product => {
+        productsGrid.appendChild(createProductCard(product));
+      });
+      observeFadeSlide();
+    }
+
+    // Initial render
+    renderProducts(products);
+
+    // Search filter
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+      renderProducts(filtered);
+    });
+
+    // Cart functionality
     let cart = [];
     let total = 0;
 
@@ -296,9 +420,16 @@
         return;
       }
       const price = pricePerKg * qty;
-      cart.push({ product, qty, price });
+      const existingIndex = cart.findIndex(item => item.product === product);
+      if (existingIndex > -1) {
+        cart[existingIndex].qty += qty;
+        cart[existingIndex].price += price;
+      } else {
+        cart.push({ product, qty, price });
+      }
       total += price;
       updateCartDisplay();
+      animateCartCount();
       alert(`${product} added to cart!`);
     }
 
@@ -315,23 +446,33 @@
         const li = document.createElement("div");
         li.className = "flex justify-between items-center mb-2";
         li.innerHTML = `
-          <span>${item.product} - ${item.qty} Kg - ₹${formatPrice(item.price)}</span>
-          <button onclick="removeFromCart(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-sm">Remove</button>
+          <span>${item.product} - ${item.qty.toFixed(2)} Kg - ₹${formatPrice(item.price)}</span>
+          <button onclick="removeFromCart(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Remove ${item.product} from cart">Remove</button>
         `;
         cartList.appendChild(li);
       });
       document.getElementById("total").textContent = `Total: ₹${formatPrice(total)}`;
-      document.querySelector("#cart-btn span").textContent = `Cart (${cart.length})`;
+      document.getElementById("cart-count-text").textContent = `Cart (${cart.length})`;
+    }
+
+    function animateCartCount() {
+      const cartCountText = document.getElementById("cart-count-text");
+      cartCountText.classList.add('cart-count-animate');
+      cartCountText.addEventListener('animationend', () => {
+        cartCountText.classList.remove('cart-count-animate');
+      }, { once: true });
     }
 
     function toggleCart() {
       const modal = document.getElementById("cart-modal");
-      modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+      modal.classList.toggle('open');
+      if (modal.classList.contains('open')) {
+        modal.focus();
+      }
     }
 
-    // Event listeners
+    // Event listeners for cart
     document.getElementById("cart-btn").addEventListener("click", toggleCart);
-
     document.getElementById("empty-cart-btn").addEventListener("click", () => {
       if (cart.length === 0) {
         alert("Cart is already empty!");
@@ -344,7 +485,6 @@
         alert("Cart has been emptied!");
       }
     });
-
     document.getElementById("checkout-btn").addEventListener("click", () => {
       if (cart.length === 0) {
         alert("Your cart is empty!");
@@ -375,6 +515,7 @@
 
       document.getElementById("upi-section").classList.remove("hidden");
       window.scrollTo({ top: document.getElementById("upi-section").offsetTop, behavior: "smooth" });
+      document.getElementById("upi-section").focus();
     });
 
     // Open UPI payment in new tab on button click
@@ -396,15 +537,107 @@
       toggleCart();
     });
 
-    // Close cart modal when clicking outside content
-    document.getElementById("cart-modal").addEventListener("click", (e) => {
-      if (e.target === e.currentTarget) {
+    // Close cart modal when clicking outside content or pressing Escape
+    const cartModal = document.getElementById("cart-modal");
+    cartModal.addEventListener("click", (e) => {
+      if (e.target === cartModal) {
+        toggleCart();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && cartModal.classList.contains('open')) {
         toggleCart();
       }
     });
 
-    // Initial render
-    updateCartDisplay();
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      const expanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+      mobileMenuBtn.setAttribute('aria-expanded', !expanded);
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Sticky header shadow on scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.classList.add('sticky-shadow');
+      } else {
+        header.classList.remove('sticky-shadow');
+      }
+    });
+
+    // Intersection Observer for fade-slide animations
+    function observeFadeSlide() {
+      const fadeElements = document.querySelectorAll('.fade-slide');
+      const observerOptions = {
+        threshold: 0.2
+      };
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+      fadeElements.forEach(el => observer.observe(el));
+    }
+    observeFadeSlide();
+
+    // User login state management
+    function updateUserState() {
+      const loggedInUser = JSON.parse(localStorage.getItem('pspickles_logged_in_user'));
+      const loginLink = document.getElementById('login-link');
+      const userInitial = document.getElementById('user-initial');
+      if (loggedInUser && loggedInUser.name) {
+        const initial = loggedInUser.name.trim().charAt(0).toUpperCase();
+        userInitial.textContent = initial;
+        loginLink.classList.add('hidden');
+        userInitial.classList.remove('hidden');
+      } else {
+        userInitial.classList.add('hidden');
+        loginLink.classList.remove('hidden');
+      }
+      async function registerUser (name, email, password) {
+  const res = await fetch('http://localhost:5000/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Registration failed');
+  return data;
+}
+async function loginUser (email, password) {
+  const res = await fetch('http://localhost:5000/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Login failed');
+  return data; // contains token, name, email
+}
+    }
+
+    updateUserState();
+
+    // Handle user initial click (logout)
+    document.getElementById('user-initial').addEventListener('click', () => {
+      if (confirm('Logout?')) {
+        localStorage.removeItem('pspickles_logged_in_user');
+        updateUserState();
+        alert('Logged out successfully.');
+        location.reload(); // Refresh to reset UI
+      }
+    });
+
+    // Optional: Hide login link if already logged in on page load
+    document.addEventListener('DOMContentLoaded', updateUserState);
+
   </script>
 </body>
 </html>
