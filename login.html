@@ -45,6 +45,8 @@
       <div id="register-tab" class="tab ml-6">Register</div>
     </div>
 
+    <div id="message" class="mb-4 text-center text-sm"></div>
+
     <!-- Login Form -->
     <form id="login-form">
       <label for="login-email" class="block mb-1 font-semibold">Email</label>
@@ -64,6 +66,10 @@
       <input type="password" id="register-password" required class="w-full p-2 mb-6 border border-gray-300 rounded" />
       <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded font-semibold transition">Register</button>
     </form>
+
+    <button id="dashboard-btn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold transition">
+      Go to Dashboard
+    </button>
   </div>
 
   <script>
@@ -87,55 +93,89 @@
       loginForm.classList.add('hidden');
     });
 
-    // Simple user storage in localStorage (for demo only)
-    // In real apps, use backend authentication!
+    // Dashboard button click handler
+    document.getElementById('dashboard-btn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    // Helper function to validate email format
+    function isValidEmail(email) {
+      const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      return re.test(email);
+    }
 
     // Register handler
-    registerForm.addEventListener('submit', e => {
+    registerForm.addEventListener('submit', async e => {
       e.preventDefault();
       const name = document.getElementById('register-name').value.trim();
       const email = document.getElementById('register-email').value.trim();
       const password = document.getElementById('register-password').value;
 
       if (!name || !email || !password) {
-        alert('Please fill all fields.');
+        showMessage('Please fill all fields.', 'error');
+        return;
+      }
+      if (!isValidEmail(email)) {
+        showMessage('Please enter a valid email address.', 'error');
+        return;
+      }
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters.', 'error');
         return;
       }
 
-      // Save user info in localStorage (keyed by email)
-      let users = JSON.parse(localStorage.getItem('pspickles_users') || '{}');
-      if (users[email]) {
-        alert('User  already exists. Please login.');
-        return;
+      try {
+        const res = await fetch('http://localhost:3000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Registration failed');
+        showMessage('Registration successful! Please login.', 'success');
+        registerForm.reset();
+        loginTab.click();
+        // Redirect to login page after registration success
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1000);
+      } catch (err) {
+        showMessage(err.message, 'error');
       }
-      users[email] = { name, password };
-      localStorage.setItem('pspickles_users', JSON.stringify(users));
-      alert('Registration successful! Please login.');
-      registerForm.reset();
-      loginTab.click();
     });
 
     // Login handler
-    loginForm.addEventListener('submit', e => {
+    loginForm.addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
 
-      let users = JSON.parse(localStorage.getItem('pspickles_users') || '{}');
-      if (!users[email]) {
-        alert('User  not found. Please register.');
+      if (!email || !password) {
+        showMessage('Please fill all fields.', 'error');
         return;
       }
-      if (users[email].password !== password) {
-        alert('Incorrect password.');
+      if (!isValidEmail(email)) {
+        showMessage('Please enter a valid email address.', 'error');
         return;
       }
 
-      // Save logged in user info
-      localStorage.setItem('pspickles_logged_in_user', JSON.stringify({ email, name: users[email].name }));
-      alert(`Welcome back, ${users[email].name}!`);
-      // Redirect to main page (adjust URL if needed)
-      window.location.href = 'index.html';
+      try {
+        const res = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+
+        // Save logged in user info
+        localStorage.setItem('pspickles_logged_in_user', JSON.stringify({ email, name: data.name, token: data.token }));
+        showMessage(`Welcome back, ${data.name}!`, 'success');
+        // Redirect immediately after login success
+        window.location.href = 'index.html';
+      } catch (err) {
+        showMessage(err.message, 'error');
+      }
     });
   </script>
 </body>

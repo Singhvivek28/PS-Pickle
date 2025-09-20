@@ -15,6 +15,7 @@
       background: linear-gradient(135deg, rgba(255, 235, 59, 0.5), rgba(76, 175, 80, 0.5)), url('ps2.png');
       background-size: cover;
       background-position: center;
+      will-change: transform;
     }
     .product-image {
       width: 200px;
@@ -181,7 +182,7 @@
 <body class="bg-gradient-to-br from-yellow-100 to-green-50 min-h-screen text-gray-800">
 
   <!-- Header -->
-  <header id="header" class="bg-white shadow-md sticky top-0 z-50">
+  <header id="header" class="header bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-3">
         <!-- Logo + Brand Name -->
@@ -241,7 +242,7 @@
   <!-- Products Section -->
   <section id="products" class="py-16 bg-white max-w-7xl mx-auto px-4">
     <h2 class="text-4xl font-bold text-center mb-12 text-green-600 fade-slide">Our Best Pickles</h2>
-    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div id="products-grid" class="products-grid">
       <!-- Product cards inserted by JS -->
     </div>
   </section>
@@ -256,13 +257,13 @@
   <section id="contact" class="bg-gray-200 py-16 px-4 max-w-4xl mx-auto fade-slide">
     <h2 class="text-4xl font-bold mb-8 text-green-600">Contact Us</h2>
     <p class="text-lg mb-8">Have questions or need assistance? Reach out to us!</p>
-    <form aria-label="Contact form" class="bg-white p-8 rounded-lg shadow-md" onsubmit="event.preventDefault(); alert('Thank you for contacting PS Pickles! We will get back to you soon.'); this.reset();">
+    <form id="contact-form" aria-label="Contact form" class="bg-white p-8 rounded-lg shadow-md">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <input type="text" name="name" placeholder="Your Name" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
-        <input type="email" name="email" placeholder="Your Email" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
+        <input type="text" id="contact-name" name="name" placeholder="Your Name" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
+        <input type="email" id="contact-email" name="email" placeholder="Your Email" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true" />
       </div>
-      <textarea name="message" placeholder="Your Message" rows="5" class="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true"></textarea>
-      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition">Send Message</button>
+      <textarea id="contact-message" name="message" placeholder="Your Message" rows="5" class="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-400" required aria-required="true"></textarea>
+      <button type="submit" id="contact-submit-btn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition">Send Message</button>
     </form>
   </section>
 
@@ -409,6 +410,25 @@
     let cart = [];
     let total = 0;
 
+    const messageDiv = document.createElement('div');
+    messageDiv.setAttribute('id', 'message');
+    messageDiv.className = 'text-center text-sm mb-4';
+    document.body.insertBefore(messageDiv, document.body.firstChild);
+
+    function showMessage(text, type = 'error') {
+      messageDiv.textContent = text;
+      messageDiv.className = 'text-center text-sm mb-4';
+      if (type === 'error') {
+        messageDiv.classList.add('text-red-600');
+      } else if (type === 'success') {
+        messageDiv.classList.add('text-green-600');
+      }
+      setTimeout(() => {
+        messageDiv.textContent = '';
+        messageDiv.className = 'text-center text-sm mb-4';
+      }, 3000);
+    }
+
     function formatPrice(num) {
       return num.toFixed(2);
     }
@@ -416,7 +436,7 @@
     function addToCart(product, pricePerKg, qtyKg) {
       const qty = parseFloat(qtyKg);
       if (qty <= 0) {
-        alert("Please select a valid quantity.");
+        showMessage("Please select a valid quantity.", "error");
         return;
       }
       const price = pricePerKg * qty;
@@ -430,7 +450,7 @@
       total += price;
       updateCartDisplay();
       animateCartCount();
-      alert(`${product} added to cart!`);
+      showMessage(`${product} added to cart!`, "success");
     }
 
     function removeFromCart(index) {
@@ -601,26 +621,6 @@
         userInitial.classList.add('hidden');
         loginLink.classList.remove('hidden');
       }
-      async function registerUser (name, email, password) {
-  const res = await fetch('http://localhost:5000/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Registration failed');
-  return data;
-}
-async function loginUser (email, password) {
-  const res = await fetch('http://localhost:5000/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Login failed');
-  return data; // contains token, name, email
-}
     }
 
     updateUserState();
@@ -629,6 +629,7 @@ async function loginUser (email, password) {
     document.getElementById('user-initial').addEventListener('click', () => {
       if (confirm('Logout?')) {
         localStorage.removeItem('pspickles_logged_in_user');
+        localStorage.removeItem('pspickles_auth_token');
         updateUserState();
         alert('Logged out successfully.');
         location.reload(); // Refresh to reset UI
@@ -638,6 +639,90 @@ async function loginUser (email, password) {
     // Optional: Hide login link if already logged in on page load
     document.addEventListener('DOMContentLoaded', updateUserState);
 
+    // Contact form submission handler
+    const contactForm = document.getElementById('contact-form');
+    const contactSubmitBtn = document.getElementById('contact-submit-btn');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const message = document.getElementById('contact-message').value.trim();
+
+      // Basic client-side validation
+      if (!name || !email || !message) {
+        showMessage('Please fill in all fields.', 'error');
+        return;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      // Disable submit button during submission
+      contactSubmitBtn.disabled = true;
+      contactSubmitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch('http://localhost:3000/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to send message');
+        }
+
+        // Success - show message and reset form
+        showMessage(data.message, 'success');
+        contactForm.reset();
+
+      } catch (error) {
+        console.error('Contact form error:', error);
+        showMessage(error.message, 'error');
+      } finally {
+        // Re-enable submit button
+        contactSubmitBtn.disabled = false;
+        contactSubmitBtn.textContent = 'Send Message';
+      }
+    });
+
+    // Helper function to get auth token
+    function getAuthToken() {
+      return localStorage.getItem('pspickles_auth_token');
+    }
+
+    // Example: Modify fetch calls to include Authorization header
+    // You should update all API calls that require authentication to include this header
+    async function fetchWithAuth(url, options = {}) {
+      const token = getAuthToken();
+      const headers = options.headers || {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      options.headers = headers;
+      return fetch(url, options);
+    }
+
+  </script>
+
+  <script>
+    // Parallax effect for hero
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero-bg');
+      const scrolled = window.pageYOffset;
+      const rate = scrolled * -0.5;
+      hero.style.transform = `translateY(${rate}px)`;
+    });
   </script>
 </body>
 </html>

@@ -139,3 +139,129 @@ footer {
 .contact-btn:hover {
   background: #ef6c00;
 }
+
+/* Horizontal Side Scrolling for Products */
+#products-grid {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 20px;
+  padding: 20px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #f57c00 #fff;
+}
+
+#products-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+#products-grid::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+#products-grid::-webkit-scrollbar-thumb {
+  background: #f57c00;
+  border-radius: 4px;
+}
+
+#products-grid::-webkit-scrollbar-thumb:hover {
+  background: #ef6c00;
+}
+
+.product {
+  flex: 0 0 250px;
+  scroll-snap-align: start;
+}
+
+/* Parallax Effect for Hero */
+.hero-bg {
+  transform: translateY(0);
+  transition: transform 0.1s linear;
+}
+
+/* Enhanced Animations */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.fade-slide {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.product {
+  animation: bounceIn 0.6s ease-out;
+}
+
+.header {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.hero-bg {
+  animation: slideInRight 0.8s ease-out;
+}
+
+/* Loading Animation for Product Cards */
+.product-loading {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Smooth Transitions */
+* {
+  transition: all 0.3s ease;
+}
